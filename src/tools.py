@@ -17,9 +17,15 @@ class tools:
         self.filepath = None
         self.data = None
         self.data_shape = None
-        self.comments_scores = None
         self.stop_words = None
+
+        self.all_comments = None
         self.non_toxic_comments = None
+        self.toxic_comments = None
+
+        self.comments_scores = None
+        self.non_toxic_comments_scores = None
+        self.toxic_comments_scores = None
 
         self.readData(filepath)
         self.processData()
@@ -38,6 +44,7 @@ class tools:
         self.processTraining()
         self.buildStopWordDictionary()
         self.getGoodComments()
+        self.getToxicComments()
 
     # Extract comment and toxicity score from all entries in the dataframe that
     # is being observed. Save this extracted data in self.comments_scores
@@ -46,6 +53,7 @@ class tools:
         comments_scores = df[cols]
         comments_scores['comment_text'] = self.processCommentList(comments_scores['comment_text'])
         self.comments_scores = comments_scores
+        self.all_comments = comments_scores['comment_text']
 
     # Convert all comments from an iterable to lower case, remove punctuation
     def processCommentList(self, comments):
@@ -64,14 +72,14 @@ class tools:
         for x in range(ord('b'), ord('z') + 1):
             stop_words.append(chr(x))
 
-        stop_words += self.getGoodWords()
         self.stop_words = stop_words
 
     # Extract all comments that are completely non-toxic i.e. they have a
     # target score of 0.0
     def getGoodComments(self):
-        good_comments = self.data[self.data['target'] == 0.0]
+        good_comments = self.comments_scores[self.comments_scores['target'] == 0.0]
         self.non_toxic_comments = good_comments['comment_text']
+        self.non_toxic_comments_scores = good_comments
 
     # Get every word in every good comment
     def getGoodWords(self):
@@ -80,3 +88,22 @@ class tools:
             for word in comment.split():
                 good_words.append(word)
         return list(good_words)
+
+    # Retrieve all comments with a toxicity score above 0.5 i.e. the most toxic
+    # comments
+    def getToxicComments(self):
+        toxic_comments = good_comments = self.comments_scores[self.comments_scores['target'] >= 0.5]
+        self.toxic_comments = toxic_comments['comment_text']
+        self.toxic_comments_scores = toxic_comments
+
+    def getAllComments(self):
+        return self.all_comments
+
+    def getMyToxicComments(self):
+        return self.toxic_comments
+
+    def getMyNonToxicComments(self):
+        return self.non_toxic_comments
+
+    def getStops(self):
+        return self.stop_words
