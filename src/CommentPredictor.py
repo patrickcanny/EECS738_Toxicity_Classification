@@ -1,6 +1,12 @@
 import tools
 import pandas as pd
 
+from keras.layers import Dense, Input, LSTM, Embedding, Dropout, Activation
+from keras.layers import Bidirectional, GlobalMaxPool1D
+from keras.models import Model
+from keras import initializers, regularizers, constraints, optimizers, layers
+
+
 class CommentPredictor:
 
     def __init__(self, tools):
@@ -66,4 +72,19 @@ class CommentPredictor:
             for word in comment.split():
                 s.add(word)
         return s
+    def buildNeuralNet(self, numWords, commentLen):
+        #input layer for an arbitrary number of comments of length commentLen
+        inputLayer = Input(shape=(commentLen, ))    
+        #drop 1/10 nodes to improve generalization
+        x = Dropout(rate=.9)(inputLayer)
+        #standard nn
+        x = Dense(50, activation='relu')(x)
+        #drop again
+        x = Dropout(rate=.9)(x)
+        #standard nn, sigmoid for values between 0 and 1
+        x = Dense(1, activation='sigmoid')(x)
+        model = Model(inputs=inputLayer, outputs=x)
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+        model.summary()
+        return model
 

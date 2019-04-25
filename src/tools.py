@@ -10,6 +10,8 @@ import nltk
 import ssl
 from sklearn.feature_extraction.text import CountVectorizer
 
+
+
 class tools:
     # Entrypoint for tools. Unique Identifier for a tools object is the
     # filepath to the dataset being observed by the tools.
@@ -65,6 +67,7 @@ class tools:
         processed = []
         for comment in comments:
             comment = comment.lower().translate(trantab)
+            comment = (comment.encode('ascii', 'ignore')).decode("utf-8")
             processed.append(comment)
         return processed
 
@@ -111,6 +114,8 @@ class tools:
 
     def getMyNonToxicComments(self):
         return self.non_toxic_comments
-
+    def getProcessedComments(self):
+        return self.processCommentList(self.all_comments)
+            
     def getStops(self):
         return self.stop_words
