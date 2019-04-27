@@ -9,7 +9,7 @@ from stop_words import get_stop_words
 import nltk
 import ssl
 from sklearn.feature_extraction.text import CountVectorizer
-
+import re
 
 
 class tools:
@@ -36,7 +36,7 @@ class tools:
     # entries from that dataframe that contain NaNs.
     def readData(self, filepath):
         df = pd.read_csv(filepath)
-        df = df.dropna()
+   #     df = df.dropna()
         self.data_shape = df.shape
         self.data = df
         self.filepath = filepath
@@ -68,6 +68,7 @@ class tools:
         for comment in comments:
             comment = comment.lower().translate(trantab)
             comment = (comment.encode('ascii', 'ignore')).decode("utf-8")
+            comment = (re.sub(r"[^a-zA-Z0-9]+", ' ', comment))
             processed.append(comment)
         return processed
 

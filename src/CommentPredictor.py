@@ -33,6 +33,8 @@ class CommentPredictor:
                 weight *= 0.0
             self.word_weight_dict[word] = weight
 
+    def initializeTestSetWeights(self):
+
     def getPreds(self):
         return self.predictions
 
@@ -84,7 +86,8 @@ class CommentPredictor:
         #standard nn, sigmoid for values between 0 and 1
         x = Dense(1, activation='sigmoid')(x)
         model = Model(inputs=inputLayer, outputs=x)
-        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+        adamOpt = optimizers.Adam(lr=.0001)
+        model.compile(loss='binary_crossentropy', optimizer=adamOpt, metrics=['accuracy'])
         model.summary()
         return model
 
