@@ -33,8 +33,6 @@ class CommentPredictor:
                 weight *= 0.0
             self.word_weight_dict[word] = weight
 
-    def initializeTestSetWeights(self):
-
     def getPreds(self):
         return self.predictions
 
