@@ -6,7 +6,7 @@ from keras.layers import Bidirectional, GlobalMaxPool1D
 from keras.models import Model
 from keras import initializers, regularizers, constraints, optimizers, layers
 
-
+from nltk.corpus import sentiwordnet as swn
 class CommentPredictor:
 
     def __init__(self, tools):
@@ -25,12 +25,12 @@ class CommentPredictor:
         stop_words = self.tools.getStops()
         for word in words:
             weight = 0.0
-            if word in non_toxic_words:
-                weight += -0.09
             if word in toxic_words:
-                weight += 0.75
+                weight = 1.0
+                if word in non_toxic_words:
+                    weight = .5
             if word in stop_words:
-                weight *= 0.0
+                weight = 0
             self.word_weight_dict[word] = weight
 
     def getPreds(self):
