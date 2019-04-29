@@ -1,1 +1,5 @@
 nnsrc/*.csv filter=lfs diff=lfs merge=lfs -text
+data/sample_submission.csv filter=lfs diff=lfs merge=lfs -text
+data/test.csv filter=lfs diff=lfs merge=lfs -text
+data/toxic_comments.csv filter=lfs diff=lfs merge=lfs -text
+data/train.csv filter=lfs diff=lfs merge=lfs -text

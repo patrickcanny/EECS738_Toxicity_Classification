@@ -38,9 +38,10 @@ def buildNeuralNet(numWords, commentLen):
     return model
 
 def main(): 
-    train = pd.read_csv('train.csv')
-    test = pd.read_csv('test.csv')
-    subm = pd.read_csv('sample_submission.csv')
+    train = pd.read_csv('../data/train.csv')
+    test = pd.read_csv('../data/test.csv')
+    subm = pd.read_csv('../data/sample_submission.csv')
+    print("read")
 
     label_cols = ['target',
                     'severe_toxicity',
@@ -76,14 +77,19 @@ def main():
     y = train[label_cols].values
     trainComments = train["comment_text"]
     testComments = test["comment_text"]
+    print(len(trainComments))
 
     uniqueWords = 20000
+    print("tokenizing")
     tok = Tokenizer(num_words=uniqueWords)
     tok.fit_on_texts(list(trainComments))
     trainComments_tokenized = tok.texts_to_sequences(trainComments)
     testComments_tokenized = tok.texts_to_sequences(testComments)
     commentLen = 200
+    print("padding")
+
     X_t = pad_sequences(trainComments_tokenized, maxlen=commentLen)
+    print(len(X_t))
     X_te = pad_sequences(testComments_tokenized, maxlen=commentLen)
 
     net = buildNeuralNet(uniqueWords, commentLen)
